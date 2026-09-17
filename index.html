@@ -18,7 +18,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Project Opportunity Management System v5.0</title>
+<title>Project Opportunity Management System v5.1</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -203,7 +203,7 @@ tbody tr:hover{background:var(--card2)}
 <!-- ============ LOGIN ============ -->
 <div id="authScreen">
   <div class="authCard">
-    <div class="bl"><i>◈</i><h2>Project Opportunity System<small>ชีต Data + Users • ซิงค์ 2 ทาง • v5.0</small></h2></div>
+    <div class="bl"><i>◈</i><h2>Project Opportunity System<small>ชีต Data + Users • ซิงค์ 2 ทาง • v5.1</small></h2></div>
     <div class="err" id="authErr"></div>
     <div id="loginForm">
       <div class="f"><label>ชื่อผู้ใช้</label><input id="luser" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -225,7 +225,7 @@ tbody tr:hover{background:var(--card2)}
 <!-- ============ APP ============ -->
 <div id="app" style="display:none">
 <header><div class="hd">
-  <div class="logo"><i>◈</i><div>Project Opportunity System <small>ชีต Data + Users • v5.0</small></div></div>
+  <div class="logo"><i>◈</i><div>Project Opportunity System <small>ชีต Data + Users • v5.1</small></div></div>
   <div class="sp"></div>
   <div class="who" id="whoBox"></div>
   <span class="who" id="syncPill">☁️ กำลังเริ่มต้น...</span>
@@ -479,7 +479,7 @@ window.onerror=function(){var w=document.getElementById('bootWarn');
   return true;};
 
 /* ============ URL เชื่อมต่อ (ฝังไว้แล้ว) ============ */
-var DEFAULT_URL='https://script.google.com/macros/s/AKfycbwldoOmGj3v-E6N3C_40d2E1GrmXauHJBtSrRVHzWJs-wF3Qopm1jT17KkkBXs0tqgD/exec';
+var DEFAULT_URL='https://script.google.com/macros/s/AKfycbyU5vSooQKIpbE32SqzX3gJ2FD3Mv1lMn1R2IfljR_4tBEiqNsWKru6ww9abxURnQCLgw/exec';
 var DEFAULT_KEY='POMS-KEY-CHANGE-ME-8f3a92c7';
 
 /* ================= CONSTANTS ================= */
@@ -530,7 +530,7 @@ function optHtml(a){return a.map(function(x){return '<option>'+esc(x)+'</option>
 function dlHtml(a){return a.map(function(x){return '<option value="'+esc(x)+'">'}).join('')}
 
 /* ================= SYNC CORE ================= */
-var SKEY_CFG='poms_cfg_v5', SKEY_SNAP='poms_snap_v5';
+var SKEY_CFG='poms_cfg_v51', SKEY_SNAP='poms_snap_v51';
 var SYNC={
   cfg:{url:DEFAULT_URL,key:DEFAULT_KEY,auto:true,every:120,since:''},
   busy:false,pending:false,snap:{},_q:false,_t:null,_iv:null,
@@ -689,7 +689,7 @@ function buildOptionsFromData(){
   $('#dlDealer').innerHTML=dlHtml(uniqVals('dealer',[]))}
 
 /* ================= AUTH ================= */
-var UKEY='poms_users_v5',SESKEY='poms_session_v5',DKEY='poms_db_v5';
+var UKEY='poms_users_v51',SESKEY='poms_session_v51',DKEY='poms_db_v51';
 var USERS=[],ME=null,pendingUser=null;
 function loadUsers(){try{USERS=JSON.parse(localStorage.getItem(UKEY)||'[]')}catch(e){USERS=[]}if(!(USERS instanceof Array))USERS=[]}
 function saveUsers(){try{localStorage.setItem(UKEY,JSON.stringify(USERS))}catch(e){}}
@@ -1382,247 +1382,7 @@ initAuth();
 </html>
 
 							<script>
-                            	/*************  POMS Backend v5.0 — Data + Users  *************/
-const API_KEY      = 'POMS-KEY-CHANGE-ME-8f3a92c7';   // ต้องตรงกับในเว็บแอป
-const FILE_NAME    = 'POMS_Project_Opportunity_Database';
-const SH_DATA      = 'Data';
-const SH_USERS     = 'Users';
-const PHOTO_FOLDER = 'POMS_Site_Photos';
-const TZ           = 'Asia/Bangkok';
-
-const SIZES  = ['7.5','9','10','12.5','15','17.5','20','25'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const FYEARS = [2026,2027,2028];
-
-function defineFields(){
-  let F=[['id','ID','T'],['recDate','วันที่บันทึกข้อมูล','T'],['month','เดือน','T'],['year','ปี (ค.ศ.)','N'],
-  ['recorder','ผู้บันทึกข้อมูล','T'],['projName','ชื่อโครงการ','T'],['district','อำเภอ','T'],['projProv','จังหวัด','T'],
-  ['projRegion','Project Region','T'],['owner','เจ้าของโครงการ','T'],['ownerNat','Owner Nationality','T'],
-  ['custGroup','Customer Group','T'],['contractor','ผู้รับเหมา','T'],['contact','ชื่อผู้ติดต่อ','T'],
-  ['position','ตำแหน่ง','T'],['phone','เบอร์โทร','T'],['channel','ช่องทางการขาย','T'],
-  ['dealer','ร้านผู้แทนจำหน่าย','T'],['dealerProv','จังหวัดร้านผู้แทน','T'],['dealerRegion','Dealer Region','T'],
-  ['sector','ราชการ/เอกชน','T'],['type','Type (R/C/I/F)','T'],['nature','ลักษณะโครงการ','T'],
-  ['projType','ประเภทโครงการ','T'],['specOld','Product Spec เดิม','T'],['product','Product','T'],
-  ['grade','ชั้นคุณภาพ','T'],['mainSize','ขนาด','T']];
-  SIZES.forEach(s=>F.push(['opp'+s,'Opp '+s+' cm','N']));
-  F=F.concat([['opp79','รวม 7.5+9 cm','N'],['oppOther','Other size','N'],['oppTotal','Opp. รวมทั้งหมด (คิว)','N'],
-  ['oppCounter','Opp Counter','N'],['oppLintel','Opp Lintel','N'],['pG2','ราคาฐาน 7.5cm G2','N'],
-  ['pG4','ราคาฐาน 7.5cm G4','N'],['pWall','ราคา Wall (บาท/คิว)','N'],['pCounter','ราคา/คิว Counter','N'],
-  ['pLintel','ราคา/คิว Lintel','N'],['value','มูลค่าประมาณการ (บาท)','N'],['terms','เงื่อนไข','T'],
-  ['lat','Latitude','T'],['lng','Longitude','T'],['mapUrl','แผนที่ (URL)','T'],['photoUrl','รูป URL ภายนอก','T'],
-  ['photoUrls','รูปหน้างาน (Drive URLs)','T'],['photoCount','จำนวนรูป','N'],
-  ['startDate','วันที่เริ่มใช้สินค้า','T'],['status','Sales Status','T'],['closeDate','วันที่ปิดการขาย','T'],
-  ['closeProduct','สินค้าที่ปิดการขาย','T'],['reason','เหตุผล (Win–Loss)','T'],['team','ทีมขายผู้ดูแล','T'],
-  ['lastUpd','วัน Last updated','T'],['note','หมายเหตุ','T']]);
-  FYEARS.forEach(y=>MONTHS.forEach((m,i)=>F.push(['fc_'+y+'-'+('0'+(i+1)).slice(-2),'FC '+m+' '+y,'N'])));
-  return F.concat([['fcTotal','Forecast รวม','N'],['_by','บันทึกโดย (user)','T'],['_rev','เวอร์ชัน','N'],
-  ['_updatedAt','อัปเดตล่าสุด (ISO)','T'],['_source','แหล่งที่แก้ไข','T'],['_savedDate','วันที่บันทึกล่าสุด','T'],
-  ['_isDeleted','สถานะลบ','T'],['_deletedAt','ลบเมื่อ','T'],['_deletedBy','ลบโดย','T']]);
-}
-const FIELDS=defineFields(), KEYS=FIELDS.map(f=>f[0]), HEADS=FIELDS.map(f=>f[1]);
-const USER_HEADS=['username','ชื่อ-นามสกุล','สิทธิ์ (Role)','salt','password_hash',
-                  'ต้องเปลี่ยนรหัส','เปิดใช้งาน','สร้างเมื่อ','สร้างโดย','เข้าใช้ล่าสุด'];
-
-function onOpen(){
-  SpreadsheetApp.getUi().createMenu('⚙ POMS')
-    .addItem('ติดตั้ง / ซ่อมแซมหัวตาราง','setupSystem')
-    .addItem('ตรวจสอบหัวตาราง','verifyHeaders')
-    .addItem('รีเซ็ตรหัสผ่าน admin','resetAdmin').addToUi();
-}
-function setupSystem(){
-  const ss=SpreadsheetApp.getActive();
-  try{ss.rename(FILE_NAME)}catch(e){}
-  ss.setSpreadsheetTimeZone(TZ);
-  const d=ensureSheet(ss,SH_DATA); fitCols(d,HEADS.length);
-  d.getRange(1,1,1,HEADS.length).setValues([HEADS]).setFontWeight('bold').setFontColor('#FFF')
-   .setBackground('#FF5A1F').setWrap(true).setHorizontalAlignment('center');
-  d.setFrozenRows(1); d.setFrozenColumns(2); d.setRowHeight(1,46);
-  const rows=Math.max(d.getMaxRows()-1,1);
-  FIELDS.forEach((f,i)=>d.getRange(2,i+1,rows,1).setNumberFormat(f[2]==='N'?'#,##0.00':'@'));
-  const u=ensureSheet(ss,SH_USERS); fitCols(u,USER_HEADS.length);
-  u.getRange(1,1,1,USER_HEADS.length).setValues([USER_HEADS]).setFontWeight('bold')
-   .setFontColor('#FFF').setBackground('#1F6FEB').setHorizontalAlignment('center');
-  u.setFrozenRows(1); u.getRange(2,1,Math.max(u.getMaxRows()-1,1),5).setNumberFormat('@');
-  if(u.getLastRow()<2){const s=rndHex(16);
-    u.appendRow(['admin','ผู้ดูแลระบบ','Admin',s,sha256(s+':Admin@123'),true,true,new Date().toISOString(),'system','']);}
-  u.hideColumns(4,2);
-  SpreadsheetApp.getUi().alert('✅ ติดตั้งเรียบร้อย\n\nData: '+HEADS.length+' คอลัมน์\nUsers: 10 คอลัมน์\n\nadmin / Admin@123');
-}
-function verifyHeaders(){
-  const d=SpreadsheetApp.getActive().getSheetByName(SH_DATA);
-  if(!d){SpreadsheetApp.getUi().alert('ไม่พบชีต Data');return}
-  const cur=d.getRange(1,1,1,HEADS.length).getValues()[0], bad=[];
-  HEADS.forEach((h,i)=>{if(String(cur[i]).trim()!==h)bad.push(colL(i+1)+' : ควรเป็น "'+h+'"')});
-  SpreadsheetApp.getUi().alert(bad.length?('⚠️ ไม่ตรง '+bad.length+' คอลัมน์\n\n'+bad.slice(0,20).join('\n')):'✅ ถูกต้องครบ '+HEADS.length+' คอลัมน์');
-}
-function resetAdmin(){
-  const u=SpreadsheetApp.getActive().getSheetByName(SH_USERS), d=u.getDataRange().getValues();
-  for(let i=1;i<d.length;i++) if(String(d[i][0]).toLowerCase()==='admin'){
-    const s=rndHex(16); u.getRange(i+1,4,1,4).setValues([[s,sha256(s+':Admin@123'),true,true]]);
-    SpreadsheetApp.getUi().alert('รีเซ็ตแล้ว\n\nadmin / Admin@123'); return;}
-  const s=rndHex(16);
-  u.appendRow(['admin','ผู้ดูแลระบบ','Admin',s,sha256(s+':Admin@123'),true,true,new Date().toISOString(),'system','']);
-  SpreadsheetApp.getUi().alert('สร้างบัญชี admin ใหม่แล้ว\n\nadmin / Admin@123');
-}
-
-/* ================= API ================= */
-function doGet(){return out({ok:true,message:'POMS API v5.0'})}
-function doPost(e){
-  let p={}; try{p=JSON.parse(e.postData.contents)}catch(x){return out({ok:false,message:'รูปแบบคำขอไม่ถูกต้อง'})}
-  if(p.key!==API_KEY) return out({ok:false,error:'AUTH',message:'รหัสเชื่อมต่อไม่ถูกต้อง'});
-  try{
-    switch(p.action){
-      case 'ping':     return out({ok:true,file:SpreadsheetApp.getActive().getName(),
-                         rows:Math.max(shData().getLastRow()-1,0),
-                         time:Utilities.formatDate(new Date(),TZ,'yyyy-MM-dd HH:mm:ss')});
-      case 'pull':     return out(apiPull(p));
-      case 'push':     return out(apiPush(p));
-      case 'login':    return out(apiLogin(p));
-      case 'chpwd':    return out(apiChpwd(p));
-      case 'users':    return out(apiUsers());
-      case 'saveuser': return out(apiSaveUser(p));
-      case 'photo':    return out(apiPhoto(p));
-      default:         return out({ok:false,message:'ไม่รู้จักคำสั่งนี้'});
-    }
-  }catch(err){return out({ok:false,message:'ระบบปลายทางทำงานผิดพลาด กรุณาลองใหม่'})}
-}
-function out(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}
-function shData(){return SpreadsheetApp.getActive().getSheetByName(SH_DATA)}
-function shUsers(){return SpreadsheetApp.getActive().getSheetByName(SH_USERS)}
-
-function apiPull(p){
-  const since=p.since||'', sh=shData(), recs=[];
-  if(sh.getLastRow()>1){
-    const iDel=KEYS.indexOf('_isDeleted'), iUpd=KEYS.indexOf('_updatedAt');
-    sh.getRange(2,1,sh.getLastRow()-1,KEYS.length).getValues().forEach(function(row){
-      if(!row[0])return;
-      const upd=str(row[iUpd]);
-      if(since&&upd&&upd<=since)return;
-      if(String(row[iDel]).toUpperCase()==='Y'){recs.push({id:str(row[0]),_isDeleted:true});return}
-      recs.push(rowToObj(row));
-    });
-  }
-  return {ok:true,records:recs,serverTime:new Date().toISOString()};
-}
-function apiPush(p){
-  const lock=LockService.getScriptLock(); lock.waitLock(25000);
-  try{
-    const sh=shData(), last=sh.getLastRow();
-    const data=last>1?sh.getRange(2,1,last-1,KEYS.length).getValues():[];
-    const rowOf={}; data.forEach((r,i)=>{if(r[0])rowOf[String(r[0])]=i});
-    const saved=[],conflicts=[];
-    const iRev=KEYS.indexOf('_rev'),iUpd=KEYS.indexOf('_updatedAt'),iSrc=KEYS.indexOf('_source'),iDel=KEYS.indexOf('_isDeleted');
-    (p.records||[]).forEach(function(rec){
-      const id=str(rec.id); if(!id)return;
-      const exist=rowOf.hasOwnProperty(id), base=Number(rec._baseRev||0);
-      let row;
-      if(exist){
-        row=data[rowOf[id]].slice();
-        const sRev=Number(row[iRev]||0);
-        if(!p.force&&sRev>base){conflicts.push({id:id,client:rec,server:rowToObj(row)});return}
-        row[iRev]=sRev+1;
-      } else { row=new Array(KEYS.length).fill(''); row[iRev]=1; }
-      KEYS.forEach(function(k,c){
-        if(k==='_rev'||k==='_updatedAt'||k==='_source')return;
-        if(rec.hasOwnProperty(k))row[c]=(rec[k]==null)?'':rec[k];
-      });
-      row[iDel]=''; row[iUpd]=new Date().toISOString(); row[iSrc]='WebApp:'+(p.by||'-');
-      if(exist)sh.getRange(rowOf[id]+2,1,1,KEYS.length).setValues([row]);
-      else{sh.appendRow(row);data.push(row);rowOf[id]=data.length-1}
-      saved.push(id);
-    });
-    (p.deleted||[]).forEach(function(id){softDelete(String(id),p.by||'-')});
-    return {ok:true,saved:saved,conflicts:conflicts,serverTime:new Date().toISOString()};
-  } finally { lock.releaseLock(); }
-}
-function softDelete(id,by){
-  const sh=shData(); if(sh.getLastRow()<2)return;
-  const ids=sh.getRange(2,1,sh.getLastRow()-1,1).getValues();
-  const cDel=KEYS.indexOf('_isDeleted')+1, cUpd=KEYS.indexOf('_updatedAt')+1;
-  for(let i=0;i<ids.length;i++) if(String(ids[i][0])===id){
-    sh.getRange(i+2,cDel,1,3).setValues([['Y',new Date().toISOString(),by]]);
-    sh.getRange(i+2,cUpd).setValue(new Date().toISOString()); return;
-  }
-}
-function apiLogin(p){
-  const u=String(p.u||'').toLowerCase(),pw=String(p.p||''),sh=shUsers(),d=sh.getDataRange().getValues();
-  for(let i=1;i<d.length;i++){
-    if(String(d[i][0]).toLowerCase()!==u)continue;
-    if(d[i][6]===false)return {ok:false,message:'บัญชีนี้ถูกปิดการใช้งาน'};
-    if(sha256(d[i][3]+':'+pw)!==String(d[i][4]))return {ok:false,message:'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'};
-    sh.getRange(i+1,10).setValue(new Date().toISOString());
-    return {ok:true,user:{u:String(d[i][0]),n:String(d[i][1]),r:String(d[i][2]),must:(d[i][5]===true)},
-            verifier:'sha256:'+sha256(pw)};
-  }
-  return {ok:false,message:'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'};
-}
-function apiChpwd(p){
-  const u=String(p.u||'').toLowerCase(),neo=String(p.neo||'');
-  if(neo.length<8)return {ok:false,message:'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'};
-  const sh=shUsers(),d=sh.getDataRange().getValues();
-  for(let i=1;i<d.length;i++){
-    if(String(d[i][0]).toLowerCase()!==u)continue;
-    if(!p.force&&sha256(d[i][3]+':'+String(p.old||''))!==String(d[i][4]))
-      return {ok:false,message:'รหัสผ่านปัจจุบันไม่ถูกต้อง'};
-    const s=rndHex(16);
-    sh.getRange(i+1,4,1,3).setValues([[s,sha256(s+':'+neo),false]]);
-    return {ok:true,verifier:'sha256:'+sha256(neo)};
-  }
-  return {ok:false,message:'ไม่พบบัญชีผู้ใช้นี้'};
-}
-function apiUsers(){
-  const d=shUsers().getDataRange().getValues(),list=[];
-  for(let i=1;i<d.length;i++){ if(!d[i][0])continue;
-    list.push({u:String(d[i][0]),n:String(d[i][1]),r:String(d[i][2]),
-               must:(d[i][5]===true),active:(d[i][6]!==false),last:str(d[i][9])}); }
-  return {ok:true,users:list};
-}
-function apiSaveUser(p){
-  const by=String(p.by||'').toLowerCase();
-  if(roleOf(by)!=='Admin')return {ok:false,message:'เฉพาะผู้ดูแลระบบเท่านั้น'};
-  const sh=shUsers(),d=sh.getDataRange().getValues(),u=String(p.u||'').toLowerCase();
-  for(let i=1;i<d.length;i++){
-    if(String(d[i][0]).toLowerCase()!==u)continue;
-    if(p.remove){ if(u===by)return {ok:false,message:'ไม่สามารถลบบัญชีของตนเองได้'};
-      sh.deleteRow(i+1); return {ok:true}; }
-    if(p.n)sh.getRange(i+1,2).setValue(p.n);
-    if(p.r)sh.getRange(i+1,3).setValue(p.r);
-    if(p.p){const s=rndHex(16); sh.getRange(i+1,4,1,3).setValues([[s,sha256(s+':'+String(p.p)),true]])}
-    return {ok:true};
-  }
-  if(p.remove)return {ok:false,message:'ไม่พบบัญชีผู้ใช้นี้'};
-  const s=rndHex(16);
-  sh.appendRow([u,p.n||u,p.r||'Sales',s,sha256(s+':'+String(p.p||'Welcome@123')),
-                true,true,new Date().toISOString(),by,'']);
-  return {ok:true};
-}
-function roleOf(u){
-  const d=shUsers().getDataRange().getValues();
-  for(let i=1;i<d.length;i++) if(String(d[i][0]).toLowerCase()===u)return String(d[i][2]);
-  return '';
-}
-function apiPhoto(p){
-  const m=String(p.data||'').match(/^data:([\w\/\-\.\+]+);base64,(.+)$/);
-  if(!m)return {ok:false,message:'รูปแบบไฟล์รูปไม่ถูกต้อง'};
-  const it=DriveApp.getFoldersByName(PHOTO_FOLDER);
-  const folder=it.hasNext()?it.next():DriveApp.createFolder(PHOTO_FOLDER);
-  const name=(p.id||'IMG')+'_'+Utilities.formatDate(new Date(),TZ,'yyyyMMdd_HHmmss')+'_'+rndHex(3)+'.jpg';
-  const file=folder.createFile(Utilities.newBlob(Utilities.base64Decode(m[2]),m[1],name));
-  try{file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW)}catch(e){}
-  return {ok:true,url:'https://drive.google.com/uc?export=view&id='+file.getId()};
-}
-
-/* ---------- Utility ---------- */
-function ensureSheet(ss,n){return ss.getSheetByName(n)||ss.insertSheet(n)}
-function fitCols(sh,n){if(sh.getMaxColumns()<n)sh.insertColumnsAfter(sh.getMaxColumns(),n-sh.getMaxColumns())}
-function colL(n){let s='';while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-1-m)/26}return s}
-function rowToObj(row){const o={};KEYS.forEach((k,i)=>{let v=row[i];
-  if(v instanceof Date)v=Utilities.formatDate(v,TZ,'yyyy-MM-dd');o[k]=(v==null)?'':v});return o}
-function str(v){if(v instanceof Date)return Utilities.formatDate(v,TZ,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-  return (v==null)?'':String(v)}
-function sha256(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s,Utilities.Charset.UTF_8)
-  .map(b=>('0'+((b+256)%256).toString(16)).slice(-2)).join('')}
-function rndHex(n){let s='';for(let i=0;i<n;i++)s+=('0'+Math.floor(Math.random()*256).toString(16)).slice(-2);return s}
+                            	
 							</script>
                         </body>
                         </html>
